@@ -1,0 +1,25 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "dead_body"
+    },
+    {
+      "id": 1,
+      "name": "goose"
+    },
+    {
+      "id": 2,
+      "name": "interact_button"
+    },
+    {
+      "id": 3,
+      "name": "report_button"
+    }
+  ],
+  "info": {
+    "year": 2026,
+    "version": "1.0",
+    "contributor": "Label Studio"
+  }
+}

@@ -1,0 +1,13 @@
+# Cấu hình đường dẫn
+model_path: "models/yolo/best.engine"
+save_dir: "data/raw"
+log_dir: "data/logs"
+
+# Thông số xử lý
+target_fps: 30
+conf_threshold: 0.5
+learning_range: [0.35, 0.65]
+save_cooldown: 1.0
+
+# Danh sách màu nhân vật (HSV Range sẽ được định nghĩa ở Step 4)
+colors: ["Red", "Blue", "Green", "Yellow", "Pink", "Orange", "Black", "White"]

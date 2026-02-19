@@ -1,0 +1,9 @@
+path: C:/Users/PC/Desktop/Code/gooseBot/dataset_final
+train: images/train
+val: images/val
+
+names:
+  0: dead_body
+  1: goose
+  2: interact_button
+  3: report_button

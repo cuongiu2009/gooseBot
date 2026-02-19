@@ -1,0 +1,4 @@
+dead_body
+goose
+interact_button
+report_button
