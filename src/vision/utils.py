@@ -13,27 +13,44 @@ REAL_ROOM_NAMES = [
 # gpu=True để tận dụng sức mạnh của RTX 5060
 reader = easyocr.Reader(['en'], gpu=True)
 
-def get_dominant_color(image_crop):
-    if image_crop.size == 0:
-        return "Unknown"
-    hsv = cv2.cvtColor(image_crop, cv2.COLOR_BGR2HSV)
-    h, w, _ = hsv.shape
-    center_region = hsv[int(h*0.4):int(h*0.7), int(w*0.3):int(w*0.7)]
-    avg_h = np.mean(center_region[:, :, 0])
-    avg_s = np.mean(center_region[:, :, 1])
-    avg_v = np.mean(center_region[:, :, 2])
+def get_dominant_color_v2(image_crop):
+    if image_crop.size == 0: return "Unknown"
 
-    if avg_v < 50: return "Black"
-    if avg_s < 40 and avg_v > 150: return "White"
-    if (avg_h < 7) or (avg_h > 170): return "Red"
-    elif 7 <= avg_h < 18: return "Orange"
-    elif 18 <= avg_h < 35: return "Yellow"
-    elif 35 <= avg_h < 85: return "Green"
-    elif 85 <= avg_h < 100: return "Cyan"
-    elif 100 <= avg_h < 130: return "Blue"
-    elif 130 <= avg_h < 150: return "Purple"
-    elif 150 <= avg_h < 170: return "Pink"
-    return "Unknown"
+    # 1. Cắt lấy 2/3 phía trên để tránh nhiễu skin chân và sàn nhà
+    h, w, _ = image_crop.shape
+    upper_limit = int(h * 0.66)
+    core_crop = image_crop[0:upper_limit, :]
+
+    # 2. Chuyển sang HSV
+    hsv = cv2.cvtColor(core_crop, cv2.COLOR_BGR2HSV)
+    
+    # Định nghĩa dải màu (Có thể tinh chỉnh thêm tùy vào ánh sáng game)
+    color_ranges = {
+        "Red": [([0, 120, 70], [10, 255, 255]), ([170, 120, 70], [180, 255, 255])],
+        "Blue": [([100, 150, 0], [140, 255, 255])],
+        "Green": [([35, 100, 100], [85, 255, 255])],
+        "Yellow": [([20, 100, 100], [30, 255, 255])],
+        "Orange": [([10, 100, 100], [20, 255, 255])],
+        "Black": [([0, 0, 0], [180, 255, 50])],
+        "White": [([0, 0, 200], [180, 30, 255])]
+    }
+
+    max_pixels = 0
+    dominant_color = "Unknown"
+
+    # 3. Thuật toán bầu chọn đa số (Histogram)
+    for color_name, ranges in color_ranges.items():
+        total_mask = np.zeros(hsv.shape[:2], dtype=np.uint8)
+        for (lower, upper) in ranges:
+            mask = cv2.inRange(hsv, np.array(lower), np.array(upper))
+            total_mask = cv2.bitwise_or(total_mask, mask)
+        
+        pixel_count = cv2.countNonZero(total_mask)
+        if pixel_count > max_pixels:
+            max_pixels = pixel_count
+            dominant_color = color_name
+
+    return dominant_color
 
 def fix_room_name(text):
     # Tìm từ gần giống nhất trong danh sách
