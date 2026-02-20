@@ -1,0 +1,10 @@
+opencv-python
+numpy
+mss
+ultralytics
+PyYAML
+easyocr
+requests
+torch
+torchvision
+onnx
