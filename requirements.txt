@@ -1,3 +1,4 @@
+# --- Core Dependencies ---
 opencv-python
 numpy
 mss
@@ -5,6 +6,16 @@ ultralytics
 PyYAML
 easyocr
 requests
-torch
-torchvision
 onnx
+
+# --- PyTorch Installation ---
+# Note: Choose ONE based on your hardware.
+
+# 1. For CPU ONLY (Default):
+# torch
+# torchvision
+
+# 2. For NVIDIA GPU (RTX 5060, etc.):
+# DO NOT use 'pip install -r requirements.txt' for torch if you want GPU support.
+# Instead, run the following command manually:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124

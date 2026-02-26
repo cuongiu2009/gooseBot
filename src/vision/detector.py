@@ -42,7 +42,9 @@ def start_detector():
             frame = np.ascontiguousarray(img[:, :, :3])
 
             # CHẠY TRACKING
-            results = model.track(frame, persist=True, conf=0.5, iou=0.5, verbose=False)
+            # device=0: Sử dụng GPU đầu tiên (RTX 5060)
+            # half=True: Sử dụng Half-Precision (FP16) cho TensorRT (nhanh hơn & tiết kiệm VRAM)
+            results = model.track(frame, persist=True, conf=0.5, iou=0.5, device=0, half=True, verbose=False)
             names = model.names
 
             if frame_count % 15 == 0:
